@@ -1,0 +1,15 @@
+from django import forms
+from miscelanea.models import Persona
+
+class LoginForm(forms.ModelForm):
+    username = forms.CharField(label='username')
+    password = forms.CharField(widget=forms.PasswordInput,label='Password')
+        
+class ProfileForm(forms.ModelForm):
+    password1 = forms.CharField(widget=forms.PasswordInput,label='Password')
+    password2 = forms.CharField(widget=forms.PasswordInput,label='Repeat password')
+    class Meta:
+        model = Persona
+        fields = ('nombre','apellido','correo','direccion')
+        
+

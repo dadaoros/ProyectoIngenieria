@@ -1,0 +1,17 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<link href="{% static 'bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet" media="screen">
+</head>
+<body>
+	<h1>Acceder</h1>
+	<form action="/validar_usuario/" method="POST">
+	    {% csrf_token %}
+		{{login_form}}<br>
+		<input type="submit">
+	</form>
+</body>
+</html>

@@ -15,11 +15,13 @@ def home(request):
     return HttpResponse({template.render(context)})
     
 def log_in(request):
-    form = LoginForm()
-    template = loader.get_template("login.html")
-    context = RequestContext(request,{'login_form':form})
-    context.update(csrf(request))
-    return HttpResponse({template.render(context)})
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/')
+    else:
+        form = LoginForm()
+        context = RequestContext(request,{'login_form':form})
+        context.update(csrf(request))
+        return render_to_response("login.html",context)
 
 @login_required(login_url='/login/')
 def log_out(request):
@@ -40,15 +42,13 @@ def validar_usuario(request):
             else:
                 htmldoc="login_error.html"
         else:
-            "formulario invalido"
+            htmldoc="login.html"
     else:
         return HttpResponseRedirect('/')
     template = loader.get_template(htmldoc)
     context = RequestContext(request)
-    context.update(csrf(request))
     return HttpResponse({template.render(context)})
 
-@login_required(login_url='/login/')
 def nuevo_usuario(request):
     form = PersonaForm()
     template = loader.get_template("nuevo_usuario.html")
@@ -64,10 +64,16 @@ def crear_usuario(request):
             user = User(username=user,password=passw)
             user.set_password(passw)
             user.save()
+            datos.user=user;
             datos.save();
             return HttpResponseRedirect('/')
         else:
-            return render_to_response('login_error.html', context_instance=RequestContext(request))
+            error=None
+            template = loader.get_template("login_error.html")
+            context = RequestContext(request,{'error_message':error})
+            return HttpResponse({template.render(context)})
     else:
         return HttpResponseRedirect('/nuevo_usuario/')
-
+        
+def listar_usuarios(request):
+    return None

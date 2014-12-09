@@ -58,6 +58,10 @@ def validar_usuario(request):
     response= render_to_response(htmldoc, context_instance=context)
     return response
     
+def gestionar_usuarios(request):
+    context = RequestContext(request)
+    response= render_to_response("gestion_usuarios.html", context_instance=context)
+    return response
 def nuevo_usuario(request):
     form = PersonaForm()
     template = loader.get_template("nuevo_usuario.html")

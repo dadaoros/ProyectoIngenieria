@@ -1,0 +1,7 @@
+<h1>{{grupos}}</h1>
+<form>
+    <button type="submit" action="/gestion_usuarios/"> Gestion de Usuarios:listar, Registrar</button>
+    <button type="submit" formaction="/gestion_inventario/">Gestionar Inventario</button>
+    <button type="submit" formaction="/gestion_proveedores/">Gestionar Proveedores</button>
+    <button type="submit" formaction="/gestion_productos/" >Gestionar Parametros de Producto</button>
+</form>

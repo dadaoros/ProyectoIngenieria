@@ -10,17 +10,22 @@ from miscelanea.forms import LoginForm, PersonaForm
 
 @login_required(login_url='/login/')
 def home(request):    
-    template = loader.get_template("home.html")
-    context = RequestContext(request)
-    return HttpResponse({template.render(context)})
+    #cambia dependiendo de los permisos
+    grupos=request.user.groups.filter(pk=1)
+    context = RequestContext(request,{'grupos':grupos})
+    response= render_to_response("admin_home.html", context_instance=context)
+    return response
     
 def log_in(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/')
+        response=HttpResponseRedirect('/')#falta en el diagrama de secuencia 1
+        return response
     else:
         form = LoginForm()
-        context = RequestContext(request,{'login_form':form})
-        context.update(csrf(request))
+        diccionario={'login_form':form}
+        context = RequestContext(request,diccionario)
+        token=csrf(request)
+        context.update(token)
         return render_to_response("login.html",context)
 
 @login_required(login_url='/login/')
@@ -32,23 +37,27 @@ def validar_usuario(request):
     htmldoc=None
     if request.POST:
         datos=LoginForm(request.POST)
-        if datos.is_valid():
+        result=datos.is_valid()
+        if result:
             user=datos.cleaned_data['usuario']
             passw=datos.cleaned_data['password']
             usuario=authenticate(username=user,password=passw)
             if usuario is not None:
                 login(request,usuario)
-                htmldoc="home.html"
+                return HttpResponseRedirect('/')
             else:
                 htmldoc="login_error.html"
+                #error usuario contrasena
         else:
             htmldoc="login.html"
+            #error de formulario
     else:
-        return HttpResponseRedirect('/')
-    template = loader.get_template(htmldoc)
+        response=HttpResponseRedirect('/')
+        return response
     context = RequestContext(request)
-    return HttpResponse({template.render(context)})
-
+    response= render_to_response(htmldoc, context_instance=context)
+    return response
+    
 def nuevo_usuario(request):
     form = PersonaForm()
     template = loader.get_template("nuevo_usuario.html")
@@ -76,4 +85,4 @@ def crear_usuario(request):
         return HttpResponseRedirect('/nuevo_usuario/')
         
 def listar_usuarios(request):
-    return None
+    return Nonerequest

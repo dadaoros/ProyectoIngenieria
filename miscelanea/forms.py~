@@ -16,9 +16,6 @@ class PersonaForm(forms.ModelForm):
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1', '')
         password2 = self.cleaned_data.get('password2', '')
-        if password1 != password2:
-            return HttpResponse("No puede votar en esta encuesta.")
-
 
         return password2
         

@@ -9,11 +9,18 @@ from miscelanea.models import Persona
 from miscelanea.forms import LoginForm, PersonaForm
 
 @login_required(login_url='/login/')
-def home(request):    
-    #cambia dependiendo de los permisos
-    grupos=request.user.groups.filter(pk=1)
-    context = RequestContext(request,{'grupos':grupos})
-    response= render_to_response("admin_home.html", context_instance=context)
+def home(request):
+    grupos=request.user.groups.all()
+    grupo=grupos[0].name
+    if grupo=="Administrador":
+        htmldoc="admin_home.html"
+    else:
+        if grupo=="Operario":
+            htmldoc="home.html"
+        else:
+            htmldoc="no_home.html"
+    context = RequestContext(request,{'grupos':grupo})
+    response= render_to_response(htmldoc, context_instance=context)
     return response
     
 def log_in(request):
@@ -26,7 +33,8 @@ def log_in(request):
         context = RequestContext(request,diccionario)
         token=csrf(request)
         context.update(token)
-        return render_to_response("login.html",context)
+        response= render_to_response("login.html",context)
+        return response
 
 @login_required(login_url='/login/')
 def log_out(request):
@@ -77,13 +85,16 @@ def crear_usuario(request):
             passw=datos.clean_password2()
             user = User(username=user,password=passw)
             user.set_password(passw)
+            user.groups.add("Operario")
             user.save()
-            datos.user=user;
-            datos.save();
+            persona=datos.save();
+            persona.user=user
+            persona.save()
+            #conectar usuario con persona
             return HttpResponseRedirect('/')
         else:
-            error=None
-            template = loader.get_template("login_error.html")
+            error="Revise que los datos ingresados sean correctos"
+            template = loader.get_template("nuevo_usuario.html")
             context = RequestContext(request,{'error_message':error})
             return HttpResponse({template.render(context)})
     else:

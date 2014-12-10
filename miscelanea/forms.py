@@ -7,7 +7,7 @@ class LoginForm(forms.Form):
     
         
 class PersonaForm(forms.ModelForm):
-    username = forms.CharField(max_length=15,widget=forms.PasswordInput,label='Usuario')
+    username = forms.CharField(max_length=15,widget=forms.TextInput,label='Usuario')
     password1 = forms.CharField(max_length=10,widget=forms.PasswordInput,label='Contrasena')
     password2 = forms.CharField(max_length=10,widget=forms.PasswordInput,label='Repita la contrasena')
     class Meta:

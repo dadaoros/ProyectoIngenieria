@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container" style="width:60%">
-    <form action="/buscar_productos/" method="GET">
+    <form action="/nueva_categoria/" method="GET">
     <button type="submit" class="btn btn-default pull-right" alt="Agregar categoria">
         <span class="glyphicon glyphicon-plus"></span>
     </button>

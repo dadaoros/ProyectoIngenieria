@@ -38,3 +38,16 @@ class Producto(models.Model):
 	def __unicode__(self):
 		return unicode(self.nombreProducto)
 
+class Canasta(models.Model):
+	operario=models.OneToOneField(User,null=True)
+	def __unicode__(self):
+		return unicode(self.operario)
+	def calcularValorTotal():
+		pass
+
+class DetalleVenta(models.Model):
+	canasta=models.ForeignKey(Canasta,null=True)
+	cantidad=models.IntegerField(default=1)
+	producto=models.ForeignKey(Producto,null=True)
+	def __unicode__(self):
+		return unicode(self.producto)

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 	<div class="container" style="width:52%">
+		<h3>Ingresar Nuevo Producto</h3>
 		<h3>{{error_message}}</h3>
 		<form action="/crear_producto/" method="GET">
 			<label for="{{ newproduct_form.numeroReferencia.id_for_label }}">Numero de Referencia:</label>

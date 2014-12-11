@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.template import loader, Context, RequestContext
-from miscelanea.models import Persona,Producto,Categoria,Proveedor
+from miscelanea.models import Persona,Producto,Categoria,Proveedor,Canasta,DetalleVenta
 from miscelanea.forms import LoginForm, PersonaForm, ProductoForm,BuscarProductoForm,CategoriaForm
 from django.db import IntegrityError
 
@@ -98,6 +98,10 @@ def crear_usuario(request):
                 except IntegrityError, e:
                     error="Ya existe un nombre de usuario igual al ingresado!"            
                 else:
+                    c=Canasta()
+                    c.save()
+                    c.operario=user
+                    c.save()
                     grupo = Group.objects.get(name='Operario')
                     grupo.user_set.add(user)
                     persona=datos.save()
@@ -234,3 +238,60 @@ def crear_categoria(request):
     context = RequestContext(request,diccionario)
     response= render_to_response(htmldoc, context_instance=context)
     return response
+
+#Modulo Operarios
+
+def gestionar_venta(request):
+    diccionario=listar_productos_canasto(request)
+    context = RequestContext(request,diccionario)
+    response= render_to_response("gestion_ventas.html", context_instance=context)
+    return response
+def listar_productos_canasto(request):
+    user=request.user
+    try:
+        canasto=Canasta.objects.filter(operario=user)
+        productos=canasto[0].detalleventa_set.all()
+        error=""
+    except:
+        error="No se pudo obtener el listado de productos"
+        productos=""
+    else:
+        if not productos:
+            error="No existen productos aun en el carro de compras"   
+    total=0
+    for p in productos:
+        total+=p.cantidad*p.producto.precio
+
+    diccionario={"productos":productos,"errores":error,"total":total}
+    return diccionario
+def remover_productos(request):
+    items=request.GET.getlist('seleccion','')
+    user=request.user
+    for item in items:
+        detalle=DetalleVenta.objects.filter(pk=item)
+        detalle.delete()
+
+    return HttpResponseRedirect('/')
+    context = RequestContext(request,{'respuesta':seleccion})
+    response= render_to_response("gestion_ventas.html", context_instance=context)
+    return response
+def finalizar_venta(request):
+    diccionario=listar_productos_canasto(request)
+    if diccionario['errores'] is not "":
+        pass
+    else:
+        finalizado=reducir_inventario(diccionario)
+        if finalizado is True:
+            htmldoc="recibo_compra.html" 
+        else:
+            diccionario['errores']=...
+            htmldoc="gestion_ventas.html"
+    context = RequestContext(request,diccionario)
+    response= render_to_response("gestion_ventas.html", context_instance=context)
+    return response
+
+def reducir_inventario(diccionario):
+    pass 
+    return resultado
+def revisar_existencias():
+    pass

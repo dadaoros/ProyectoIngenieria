@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="width:60%">
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="/buscar_producto/">
+        <span class="glyphicon glyphicon-search btn-lg"></span>Buscar Producto</a></li>
+      <li><a href="/remover_productos/">
+        <span class="glyphicon glyphicon-remove-circle btn-lg"></span>Remover Productos</a></li>
+      <li><a href="/finalizar_venta/">
+        <span class="glyphicon glyphicon-shopping-cart btn-lg"></span>Finalizar Venta</a></li>
+    </ul>
+</div>
+{% endblock %}

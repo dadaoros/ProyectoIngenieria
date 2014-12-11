@@ -284,13 +284,14 @@ def finalizar_venta(request):
         if finalizado is True:
             htmldoc="recibo_compra.html" 
         else:
-            diccionario['errores']=...
+            diccionario['errores']=""
             htmldoc="gestion_ventas.html"
     context = RequestContext(request,diccionario)
     response= render_to_response("gestion_ventas.html", context_instance=context)
     return response
 
 def reducir_inventario(diccionario):
+
     pass 
     return resultado
 def revisar_existencias():

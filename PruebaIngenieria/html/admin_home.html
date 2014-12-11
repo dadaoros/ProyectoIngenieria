@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 <h1>{{grupos}}</h1>
 <form>
     <button type="submit" formaction="/gestion_usuarios/"> Gestion de Usuarios</button>
@@ -5,3 +7,4 @@
     <button type="submit" formaction="/gestion_proveedores/">Gestionar Proveedores</button>
     <button type="submit" formaction="/gestion_productos/" >Gestionar Parametros de Producto</button>
 </form>
+{% endblock %}

@@ -4,6 +4,7 @@
 	<div class="container" style="width:52%">
 	<form action="/crear_usuario/" method="POST">
 		{% csrf_token %}
+		<h2>{{error_message}}</h2><br>
 		<label for="{{ newuser_form.nombre.id_for_label }}">Nombres:</label>
 		{{newuser_form.nombre}}<br>
         <label for="{{ newuser_form.apellido.id_for_label }}">Apellidos:</label>

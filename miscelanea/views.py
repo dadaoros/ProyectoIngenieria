@@ -1,12 +1,13 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.template import loader, Context, RequestContext
 from miscelanea.models import Persona
 from miscelanea.forms import LoginForm, PersonaForm
+from django.db import IntegrityError
 
 @login_required(login_url='/login/')
 def home(request):
@@ -80,25 +81,60 @@ def nuevo_usuario(request):
 def crear_usuario(request):
     if request.POST:
         datos=PersonaForm(request.POST)
+        error=None
+        htmldoc="nuevo_usuario.html"
         if datos.is_valid():
             user=datos.cleaned_data['username']
-            passw=datos.clean_password2()
-            user = User(username=user,password=passw)
-            user.set_password(passw)
-            user.groups.add("Operario")
-            user.save()
-            persona=datos.save();
-            persona.user=user
-            persona.save()
-            #conectar usuario con persona
-            return HttpResponseRedirect('/')
+            passw=datos.clean_password()
+            if passw is None:
+                error="Revise que las dos contrasenas coincidan!"
+            else:
+                user = User(username=user,password=passw)
+                user.set_password(passw)
+                try:
+                    user.save()
+                except IntegrityError, e:
+                    error="Ya existe un nombre de usuario igual al ingresado!"            
+                else:
+                    grupo = Group.objects.get(name='Operario')
+                    grupo.user_set.add(user)
+                    persona=datos.save()
+                    persona.user=user
+                    persona.save()
+                    htmldoc="operacion_exitosa.html"
         else:
-            error="Revise que los datos ingresados sean correctos"
-            template = loader.get_template("nuevo_usuario.html")
-            context = RequestContext(request,{'error_message':error})
-            return HttpResponse({template.render(context)})
+            error="Revise que los datos ingresados sean correctos!"
+        diccionario={'error_message':error,"newuser_form":datos}
+        context = RequestContext(request,diccionario)
+        response= render_to_response(htmldoc, context_instance=context)
+        return response
     else:
-        return HttpResponseRedirect('/nuevo_usuario/')
+        return HttpResponseRedirect('/')
         
 def listar_usuarios(request):
-    return Nonerequest
+    #No se pudo realizar la operacion
+    try:
+        usuarios=User.objects.all()
+    except:
+        usuarios=None
+        error="No se pudo obtener el listado de usuarios"
+    if usuarios is not None:        
+        diccionario={'usuarios':usuarios}
+        context = RequestContext(request,diccionario)        
+    else:
+        error="No hay Usuarios Registrados"
+        diccionario={'error_message':error}
+        context = RequestContext(request,diccionario)
+    response= render_to_response("lista_usuarios.html", context_instance=context)
+    return response
+
+def gestionar_productos(request):
+    context = RequestContext(request)
+    response= render_to_response("gestion_productos.html", context_instance=context)
+    return response
+
+def nuevo_producto(request):
+    form = PersonaForm()
+    template = loader.get_template("nuevo_usuario.html")
+    context = RequestContext(request,{'newuser_form':form})
+    return HttpResponse({template.render(context)})

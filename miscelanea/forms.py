@@ -22,12 +22,9 @@ class PersonaForm(forms.ModelForm):
             return None
 
 class ProductoForm(forms.ModelForm):
-    username = forms.CharField(max_length=15,widget=forms.TextInput,label='Usuario')
-    password1 = forms.CharField(max_length=10,widget=forms.PasswordInput,label='Contrasena')
-    password2 = forms.CharField(max_length=10,widget=forms.PasswordInput,label='Repita la contrasena')
     class Meta:
         model = Producto
-        fields = ('numeroReferencia','nombreProducto','marca','existencias','existenciaMinima','descripcion','precio')
+        fields = ('numeroReferencia','nombreProducto','marca','existencias','existenciaMinima','descripcion','precio','proveedor')
 
         
     

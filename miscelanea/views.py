@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.template import loader, Context, RequestContext
 from miscelanea.models import Persona
-from miscelanea.forms import LoginForm, PersonaForm
+from miscelanea.forms import LoginForm, PersonaForm, ProductoForm
 from django.db import IntegrityError
 
 @login_required(login_url='/login/')
@@ -20,7 +20,7 @@ def home(request):
             htmldoc="home.html"
         else:
             htmldoc="no_home.html"
-    context = RequestContext(request,{'grupos':grupo})
+    context = RequestContext(request)
     response= render_to_response(htmldoc, context_instance=context)
     return response
     
@@ -74,9 +74,9 @@ def gestionar_usuarios(request):
     
 def nuevo_usuario(request):
     form = PersonaForm()
-    template = loader.get_template("nuevo_usuario.html")
     context = RequestContext(request,{'newuser_form':form})
-    return HttpResponse({template.render(context)})
+    response= render_to_response("nuevo_usuario.html", context_instance=context)
+    return response
 
 def crear_usuario(request):
     if request.POST:
@@ -134,7 +134,7 @@ def gestionar_productos(request):
     return response
 
 def nuevo_producto(request):
-    form = PersonaForm()
-    template = loader.get_template("nuevo_usuario.html")
-    context = RequestContext(request,{'newuser_form':form})
+    form = ProductoForm()
+    template = loader.get_template("nuevo_producto.html")
+    context = RequestContext(request,{'newproduct_form':form})
     return HttpResponse({template.render(context)})

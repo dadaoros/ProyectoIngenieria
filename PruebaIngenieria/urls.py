@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^crear_usuario/$', 'miscelanea.views.crear_usuario'),
     url(r'^lista_usuarios/$', 'miscelanea.views.listar_usuarios'),
     url(r'^gestion_productos/$','miscelanea.views.gestionar_productos'),
+    url(r'^nuevo_producto/$','miscelanea.views.nuevo_producto'),
 )

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<form>
-    <button type="submit" formaction="/nuevo_usuario/">Agregar usuario</button>
-    <button type="submit" formaction="/lista_usuarios/">Listado de Usuarios</button> 
-</form>
+<div class="container" style="width:60%">
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="/nuevo_usuario/">Agregar Usuario</a></li>
+      <li><a href="/lista_usuarios/">Listado de Usuarios</a></li>
+    </ul>
+</div>
 {% endblock %}

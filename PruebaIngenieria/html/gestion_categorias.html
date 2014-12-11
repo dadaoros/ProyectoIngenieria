@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="width:60%">
+    <form action="/nueva_categoria/" method="GET">
+    <button type="submit" class="btn btn-default pull-right" alt="Agregar categoria">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    </form>
+    <div class="table-responsive">
+    <table class="table table-striped table-hover table-condensed" >
+      	<tr>
+        	<th># Cat</th>
+        	<th>Categoria</th> 
+        </tr>
+        
+        {% for categoria in categorias %}	        
+          <tr>
+	            <td>{{categoria.pk}}</td>
+	            <td>{{categoria.nombreCategoria}}</td>
+	       </tr>	    
+        {% endfor %}
+       
+    </table>	
+    </div>
+    {{errores}}
+</div>
+{% endblock %}

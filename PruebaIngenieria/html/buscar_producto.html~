@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Buscar Productos</h3>
+	<div class="container" style="width:52%">
+		<h3>{{error_message}}</h3>
+		Ingrese los datos de su producto o parte de ellos:<br><br>
+		<form action="/lista_productos/" method="GET">
+			<label for="{{ buscarproducto_form.numeroReferencia.id_for_label }}">Numero de Referencia:</label>
+			{{buscarproducto_form.numeroReferencia}}<br>
+	        <label for="{{ buscarproducto_form.nombreProducto.id_for_label }}">Nombre:</label>
+			{{buscarproducto_form.nombreProducto}}<br>
+			<label for="{{ buscarproducto_form.marca.id_for_label }}">Marca:</label>
+			{{buscarproducto_form.marca}}<br>
+			<button type="submit">Consultar</button>
+		</form>
+	</div>
+{% endblock %}

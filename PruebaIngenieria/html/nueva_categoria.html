@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Nueva Categoria:</h3>
+<br>
+<div class="container" style="width:65%">
+    <form action="/crear_categoria/" method="GET">
+        {{newcategory_form}}<br>
+        <button type="submit">Crear Categoria</button>
+    </form>
+<div>
+{% endblock %}

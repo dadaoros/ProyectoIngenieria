@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.template import loader, Context, RequestContext
-from miscelanea.models import Persona
-from miscelanea.forms import LoginForm, PersonaForm, ProductoForm
+from miscelanea.models import Persona,Producto,Categoria,Proveedor
+from miscelanea.forms import LoginForm, PersonaForm, ProductoForm,BuscarProductoForm,CategoriaForm
 from django.db import IntegrityError
 
 @login_required(login_url='/login/')
@@ -25,8 +25,10 @@ def home(request):
     return response
     
 def log_in(request):
-    if request.user.is_authenticated():
-        response=HttpResponseRedirect('/')#falta en el diagrama de secuencia 1
+    user=request.user
+    result=user.is_authenticated()
+    if result:
+        response=HttpResponseRedirect('/')
         return response
     else:
         form = LoginForm()
@@ -135,6 +137,82 @@ def gestionar_productos(request):
 
 def nuevo_producto(request):
     form = ProductoForm()
-    template = loader.get_template("nuevo_producto.html")
-    context = RequestContext(request,{'newproduct_form':form})
-    return HttpResponse({template.render(context)})
+    diccionario={'newproduct_form':form}
+    context = RequestContext(request,diccionario)
+    response= render_to_response("nuevo_producto.html", context_instance=context)
+    return response
+
+def crear_producto(request):
+    datos=ProductoForm(request.GET)
+    error=None
+    htmldoc="nuevo_producto.html"
+    if datos.is_valid():
+        try:
+            datos.save()
+        except IntegrityError, e:
+            error="El producto que intenta ingresar ya existe!"                      
+        else:
+
+            htmldoc="operacion_exitosa.html"
+    else:
+        error="Revise que los datos ingresados sean correctos!"         
+    diccionario={'error_message':error,"newproducto_form":datos}
+    context = RequestContext(request,diccionario)
+    response= render_to_response(htmldoc, context_instance=context)
+    return response 
+def buscar_productos(request):
+    form = BuscarProductoForm(request.GET)
+    diccionario={'buscarproducto_form':form}
+    context = RequestContext(request,diccionario)
+    response= render_to_response("buscar_producto.html", context_instance=context)
+    return response
+
+def listar_productos(request):
+    form = BuscarProductoForm(request.GET)
+    errors=""
+    result=form.is_valid()
+    if result:
+        idProducto=form.cleaned_data['numeroReferencia']
+        if idProducto is None:
+            idProducto=""
+        nombre=form.cleaned_data['nombreProducto']
+        if nombre is None:
+            nombre=""
+        marca=form.cleaned_data['marca']
+        if marca is None:
+            marca=""
+        try:
+            productos=Producto.objects.filter(nombreProducto__contains=nombre,numeroReferencia__contains=idProducto,marca__contains=marca)
+        except:
+            errors="No se pudo obtener el listado de productos"
+    else:
+        errors=form.errors
+    diccionario={'productos':productos,'errores':errors}                    
+   
+    context = RequestContext(request,diccionario)
+    response= render_to_response("lista_productos.html", context_instance=context)
+    return response
+def gestionar_categorias(request):
+    diccionario=listar_categorias()
+    context = RequestContext(request,diccionario)
+    response= render_to_response("gestion_categorias.html", context_instance=context)
+    return response
+def listar_categorias():
+    errors=""
+    try:
+        categorias=Categoria.objects.all().order_by('pk')
+    except:
+        errors="No se pudo Obtener el listado de categorias!"
+        categorias=None
+    else:
+        if not categorias:
+            errors="No hay categorias actualmente"
+    diccionario={'categorias':categorias,'errores':errors}
+    return diccionario
+
+def nueva_categoria(request):
+    form = CategoriaForm()
+    diccionario={'newcategory_form':form}
+    context = RequestContext(request,diccionario)
+    response= render_to_response("nueva_categoria.html", context_instance=context)
+    return response

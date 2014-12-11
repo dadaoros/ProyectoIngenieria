@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Bienvenido, Administrador</h1>
-<form>
-    <button type="submit" formaction="/gestion_usuarios/"> Gestion de Usuarios</button>
-    <button type="submit" formaction="/gestion_inventario/">Gestionar Inventario</button>
-    <button type="submit" formaction="/gestion_proveedores/">Gestionar Proveedores</button>
-    <button type="submit" formaction="/gestion_productos/" >Gestionar Parametros de Producto</button>
-</form>
+<div class="container" style="width:52%">
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="/gestion_usuarios/">Gestion de Usuarios</a></li>
+      <li><a href="/gestion_inventario/">Gestionar Inventario</a></li>
+      <li><a href="/gestion_proveedores/">Gestionar Proveedores</a></li>
+      <li><a href="/gestion_productos/">Gestionar Parametros de Producto</a></li>
+    </ul>
+</div>
+
 {% endblock %}

@@ -12,18 +12,6 @@ class Persona(models.Model):
 	def __unicode__(self):
 		return unicode(self.idPersona)    
 
-class Producto(models.Model):
-	numeroReferencia=models.IntegerField(unique=True)
-	nombreProducto=models.CharField(max_length=50)
-	marca=models.CharField(max_length=30,blank=True)
-	existencias=models.IntegerField(default=0)
-	existenciaMinima=models.IntegerField(default=0)
-	descripcion=models.TextField(default="Sin descripcion")
-	precio=models.BigIntegerField()
-	proveedor=models.ForeignKey('Proveedor',blank=True)
-	def __unicode__(self):
-		return unicode(self.nombreProducto)
-
 class Proveedor(models.Model):
 	idProveedor=models.IntegerField(unique=True)
 	direccionProveedor=models.CharField(max_length=30,null=True)
@@ -34,6 +22,19 @@ class Proveedor(models.Model):
 
 class Categoria(models.Model):
 	nombreCategoria=models.CharField(max_length=50,unique=True)
-	productos=models.ManyToManyField(Producto);
 	def __unicode__(self):
 		return unicode(self.nombreCategoria)
+
+class Producto(models.Model):
+	numeroReferencia=models.IntegerField(unique=True)
+	nombreProducto=models.CharField(max_length=49)
+	marca=models.CharField(max_length=30,blank=True)
+	existencias=models.IntegerField(default=0)
+	existenciaMinima=models.IntegerField(default=0)
+	descripcion=models.TextField(default="Sin descripcion")
+	precio=models.BigIntegerField()
+	proveedor=models.ForeignKey(Proveedor,null=True)
+	categorias=models.ManyToManyField(Categoria);
+	def __unicode__(self):
+		return unicode(self.nombreProducto)
+

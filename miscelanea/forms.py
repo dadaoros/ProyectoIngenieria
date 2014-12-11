@@ -1,5 +1,5 @@
 from django import forms
-from miscelanea.models import Persona, Producto
+from miscelanea.models import Persona, Producto, Proveedor,Categoria
 
 class LoginForm(forms.Form):
     usuario = forms.CharField(widget=forms.TextInput,label='Usuario')
@@ -24,7 +24,15 @@ class PersonaForm(forms.ModelForm):
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ('numeroReferencia','nombreProducto','marca','existencias','existenciaMinima','descripcion','precio','proveedor')
+        fields = ('numeroReferencia','nombreProducto','marca','existencias','existenciaMinima','descripcion','precio','proveedor','categorias')
 
-        
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ('nombreCategoria',)
+
+class BuscarProductoForm(forms.Form):
+    numeroReferencia = forms.CharField(max_length=15,widget=forms.NumberInput,label='numeroRef',required=False)
+    nombreProducto = forms.CharField(max_length=10,widget=forms.TextInput,label='nombre',required=False)
+    marca = forms.CharField(max_length=15,widget=forms.TextInput,label='marca',required=False)     
     

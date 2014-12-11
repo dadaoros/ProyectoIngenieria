@@ -1,4 +1,7 @@
-listar usuarios
+{% extends "base.html" %}
+{% block content %}
 <form>
-    <button type="submit" formaction="/agregar_usuario/">Agregar usuario</button> 
+    <button type="submit" formaction="/nuevo_usuario/">Agregar usuario</button>
+    <button type="submit" formaction="/lista_usuarios/">Listado de Usuarios</button> 
 </form>
+{% endblock %}

@@ -20,7 +20,7 @@
 			<label for="{{ newproduct_form.proveedor.id_for_label }}">Proveedor:</label>
 			{{newproduct_form.proveedor}}<br>
 			<label for="{{ newproduct_form.categorias.id_for_label }}">Categorias:</label>
-			{{newproduct_form.categorias}}<br>
+			{{newproduct_form.categorias[0]}}<br>
 			<input type="submit">
 		</form>
 	</div>

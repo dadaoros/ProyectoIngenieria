@@ -216,3 +216,21 @@ def nueva_categoria(request):
     context = RequestContext(request,diccionario)
     response= render_to_response("nueva_categoria.html", context_instance=context)
     return response
+
+def crear_categoria(request):
+    datos=CategoriaForm(request.GET)
+    error=None
+    htmldoc="nueva_categoria.html"
+    if datos.is_valid():
+        try:
+            datos.save()
+        except IntegrityError, e:
+            error="La Categoria que intenta ingresar ya existe!"                      
+        else:
+            htmldoc="operacion_exitosa.html"
+    else:
+        error="Revise que los datos ingresados sean correctos!"         
+    diccionario={'error_message':error,"newcategory_form":datos}
+    context = RequestContext(request,diccionario)
+    response= render_to_response(htmldoc, context_instance=context)
+    return response

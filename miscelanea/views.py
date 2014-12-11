@@ -284,15 +284,59 @@ def finalizar_venta(request):
         if finalizado is True:
             htmldoc="recibo_compra.html" 
         else:
-            diccionario['errores']=""
+            diccionario['errores']=finalizado
             htmldoc="gestion_ventas.html"
     context = RequestContext(request,diccionario)
-    response= render_to_response("gestion_ventas.html", context_instance=context)
+    response= render_to_response(htmldoc, context_instance=context)
     return response
 
 def reducir_inventario(diccionario):
-
-    pass 
-    return resultado
-def revisar_existencias():
-    pass
+    existencias=revisar_existencias(diccionario)
+    if not existencias:
+        return "No hay existencias suficientes"
+    else:
+        for detalle in diccionario['productos']:
+            producto=detalle.producto
+            e_actual=producto.existencias
+            e_solicitada=detalle.cantidad
+            producto.existencias=e_actual-e_solicitada
+            producto.save()
+        return True    
+def revisar_existencias(diccionario):
+    for p in diccionario['productos']:
+        e_actual=p.producto.existencias
+        e_solicitada=p.cantidad
+        if e_actual<e_solicitada:
+            return False
+    return True
+def buscar_producto(request):
+    form = BuscarProductoForm(request.GET)
+    diccionario={'buscarproducto_form':form}
+    context = RequestContext(request,diccionario)
+    response= render_to_response("buscar_producto_para_anadir.html", context_instance=context)
+    return response
+def listar_productos_b(request):
+    form = BuscarProductoForm(request.GET)
+    errors=""
+    result=form.is_valid()
+    if result:
+        idProducto=form.cleaned_data['numeroReferencia']
+        if idProducto is None:
+            idProducto=""
+        nombre=form.cleaned_data['nombreProducto']
+        if nombre is None:
+            nombre=""
+        marca=form.cleaned_data['marca']
+        if marca is None:
+            marca=""
+        try:
+            productos=Producto.objects.filter(nombreProducto__contains=nombre,numeroReferencia__contains=idProducto,marca__contains=marca)
+        except:
+            errors="No se pudo obtener el listado de productos"
+    else:
+        errors=form.errors
+    diccionario={'productos':productos,'errores':errors}                    
+   
+    context = RequestContext(request,diccionario)
+    response= render_to_response("lista_productos+.html", context_instance=context)
+    return response

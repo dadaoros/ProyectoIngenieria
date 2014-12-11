@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-{{respuesta}}
+<h2>Canasta de Productos</h2>
+<h3>{{respuesta}}
+{{errores}}</h3>
+<br>
 <div class="table-responsive pull-left" style="width:70%; position:relative;">
 	<form method="GET" id="gestion_canasto">
 	<table class="table table-striped table-hover table-condensed" >

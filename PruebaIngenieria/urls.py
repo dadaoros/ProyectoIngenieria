@@ -24,5 +24,6 @@ urlpatterns = patterns('',
     url(r'^buscar_producto/$','miscelanea.views.buscar_producto'),
     url(r'^lista_productos_b/$', 'miscelanea.views.listar_productos_b'),
     url(r'^remover_productos/$','miscelanea.views.remover_productos'),
+    url(r'^agregar_a_canasta/$','miscelanea.views.agregar_a_canasta'),
     url(r'^finalizar_venta/$', 'miscelanea.views.finalizar_venta'),   
 )

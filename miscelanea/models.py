@@ -27,7 +27,7 @@ class Categoria(models.Model):
 
 class Producto(models.Model):
 	numeroReferencia=models.IntegerField(unique=True)
-	nombreProducto=models.CharField(max_length=49)
+	nombreProducto=models.CharField(max_length=50)
 	marca=models.CharField(max_length=30,blank=True)
 	existencias=models.IntegerField(default=0)
 	existenciaMinima=models.IntegerField(default=0)
@@ -51,3 +51,6 @@ class DetalleVenta(models.Model):
 	producto=models.ForeignKey(Producto,null=True)
 	def __unicode__(self):
 		return unicode(self.producto)
+
+
+

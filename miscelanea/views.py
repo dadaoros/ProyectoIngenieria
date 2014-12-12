@@ -340,3 +340,20 @@ def listar_productos_b(request):
     context = RequestContext(request,diccionario)
     response= render_to_response("lista_productos+.html", context_instance=context)
     return response
+def agregar_a_canasta(request):
+    producto_id=request.GET.get('producto_id','')
+    cantidad=request.GET.get('cantidad','')
+    user=request.user
+    try:
+        canasto=Canasta.objects.get(operario=user)
+        producto=Producto.objects.get(pk=producto_id)
+        nuevo_detalle=DetalleVenta(canasta=canasto,cantidad=cantidad,producto=producto)
+        nuevo_detalle.save()            
+    except:
+        respuesta="No se pudo agregar el producto al canasto!"
+    else:
+        respuesta="Se agrego el producto con exito!"
+    diccionario={"mensaje":respuesta}
+    context = RequestContext(request,diccionario)
+    response= render_to_response("respuesta_canasta.html", context_instance=context)
+    return response

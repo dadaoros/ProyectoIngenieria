@@ -29,12 +29,16 @@
 	        <td>{{producto.precio}}</td>
 	        <td>{{producto.proveedor}}</td>
 	        <td>{% for p in producto.categorias.all %} {{p}} {% endfor %}</td>
-	        <td><div class="form-group">
-                <input name="nombre" type="text" class="form-control" placeholder="0">
-                </div>
-                <button type="submit" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus-sign"></span>
-                </button>
+	        <td>
+	            <form action="/agregar_a_canasta/" method="GET">
+	                <div class="form-group">
+                        <input name="cantidad" type="text" class="form-control" value="0">
+                    </div>
+                    <input name="producto_id" type="hidden" value='{{producto.pk}}'>
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                    </button>
+                </form>
             <td>
 	   </tr>	    
     {% endfor %}
